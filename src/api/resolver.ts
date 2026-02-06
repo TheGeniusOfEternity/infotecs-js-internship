@@ -1,4 +1,5 @@
 import type { ErrorResponseDto } from "@/api/dto/error-response.dto";
+import {apiConf} from "@/api/apiConf";
 
 interface RequestConfig<T> {
   url: string;
@@ -20,7 +21,7 @@ class Resolver {
     body?: U,
     headers: Record<string, string> = {},
   ): Promise<S | ErrorResponseDto> {
-    const fullUrl = `${this.baseUrl}${url}`;
+    const fullUrl = `${apiConf.endpoint}/${this.baseUrl}/${url}`;
     const config: RequestConfig<U> = {
       url: fullUrl,
       method,

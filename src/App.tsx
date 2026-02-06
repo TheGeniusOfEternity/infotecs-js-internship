@@ -1,10 +1,29 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import {UserResolver} from "@/api/resolvers/user.resolver";
+import type { ErrorResponseDto } from "@/api/dto/error-response.dto";
+import type { UserResponseDto } from "@/api/dto/user-response.dto";
+import type { UsersResponseDto } from "@/api/dto/users-response.dto";
 
 function App() {
   const [count, setCount] = useState(0)
+  const [users, setUsers] = useState<UserResponseDto[]>([])
+
+  const userResolver = new UserResolver();
+
+  const fetchUsers = async () => {
+    const response = await userResolver.getAll();
+    const status = (response as ErrorResponseDto).status;
+    if (!status) {
+      setUsers((response as UsersResponseDto).users);
+    }
+  }
+
+  useEffect(() => {
+    fetchUsers()
+  }, [])
 
   return (
     <>
