@@ -53,7 +53,7 @@ export default [
   {
     files: ["**/*.{tsx}"],
     settings: {
-      react: { version: "16.14" },
+      react: { version: "detect" },
     },
     plugins: {
       "react-hooks": reactHooks,
