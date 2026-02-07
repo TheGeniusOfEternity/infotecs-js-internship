@@ -46,7 +46,7 @@ export const App = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [sortField, sortDirection]);
 
   const handlePaginationChange = useCallback((newPagination: Pagination) => {
     setPagination(newPagination);
