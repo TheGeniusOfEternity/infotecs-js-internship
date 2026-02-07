@@ -23,24 +23,14 @@ export const App = () => {
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
-    const params = new URLSearchParams();
 
-    params.append('limit', pagination.limit.toString());
-    params.append('skip', (pagination.page * pagination.limit).toString());
+    const response = await userResolver.current.getAllWithFilters(
+      filters,
+      sortField,
+      sortDirection,
+      pagination
+    );
 
-    if (sortField && sortDirection) {
-      params.append('sortBy', sortField);
-      params.append('order', sortDirection);
-    }
-
-    if (filters.firstName) params.append('firstName', filters.firstName);
-    if (filters.lastName) params.append('lastName', filters.lastName);
-    if (filters.maidenName) params.append('maidenName', filters.maidenName);
-    if (filters.age) params.append('age', filters.age);
-    if (filters.gender) params.append('gender', filters.gender);
-    if (filters.phone) params.append('phone', filters.phone);
-
-    const response = await userResolver.current.getAll(null, null);
     const status = (response as ErrorResponseDto).status;
     if (!status) {
       const usersData = response as UsersResponseDto;
