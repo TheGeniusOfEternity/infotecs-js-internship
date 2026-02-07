@@ -21,7 +21,9 @@ class Resolver {
     body?: U,
     headers: Record<string, string> = {},
   ): Promise<S | ErrorResponseDto> {
-    const fullUrl = `${apiConf.endpoint}/${this.baseUrl}/${url}`;
+    const fullUrl = `
+      ${apiConf.endpoint}/${this.baseUrl}${url && !url.startsWith("?") ? "/" : ""}${url}
+    `;
     const config: RequestConfig<U> = {
       url: fullUrl,
       method,

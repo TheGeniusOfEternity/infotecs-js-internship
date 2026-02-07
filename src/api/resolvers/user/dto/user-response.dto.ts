@@ -2,7 +2,7 @@ export interface UserResponseDto {
   id: number;
   firstName: string;
   lastName: string;
-  middleName: string;
+  maidenName: string;
   age: number;
   gender: string;
   email: string;

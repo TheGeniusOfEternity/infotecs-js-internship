@@ -6,10 +6,7 @@ import type { UsersResponseDto } from "@/api/resolvers/user/dto/users-response.d
 import sortAsc from '@/assets/sort-asc.svg'
 import sortDesc from '@/assets/sort-desc.svg'
 import sortNone from '@/assets/sort-none.svg'
-
-
-type SortField = "fullName" | "age" | "gender" | "phone";
-type SortDirection = "asc" | "desc" | null;
+import type { SortDirection, SortField } from "@/shared/types";
 
 export const App = () => {
   const [users, setUsers] = useState<UserResponseDto[]>([])
@@ -21,7 +18,7 @@ export const App = () => {
 
   const fetchUsers = async () => {
     setLoading(true);
-    const response = await userResolver.getAll();
+    const response = await userResolver.getAll(sortField, sortDirection);
     const status = (response as ErrorResponseDto).status;
     if (!status) {
       setUsers((response as UsersResponseDto).users);
@@ -66,13 +63,39 @@ export const App = () => {
           <thead>
           <tr>
             <th
-              onClick={() => handleSort("fullName")}
-              className={sortField === "fullName" ? "sorted" : ""}
+              onClick={() => handleSort("lastName")}
+              className={sortField === "lastName" ? "sorted" : ""}
             >
               <div className="column-header">
-                <p>ФИО</p>
+                <p>Фамилия</p>
                 <img
-                  src={getSortIcon('fullName')}
+                  src={getSortIcon('lastName')}
+                  alt=""
+                  style={{ width: 18, height: 18 }}
+                />
+              </div>
+            </th>
+            <th
+              onClick={() => handleSort("firstName")}
+              className={sortField === "firstName" ? "sorted" : ""}
+            >
+              <div className="column-header">
+                <p>Имя</p>
+                <img
+                  src={getSortIcon('firstName')}
+                  alt=""
+                  style={{ width: 18, height: 18 }}
+                />
+              </div>
+            </th>
+            <th
+              onClick={() => handleSort("maidenName")}
+              className={sortField === "maidenName" ? "sorted" : ""}
+            >
+              <div className="column-header">
+                <p>Отчество</p>
+                <img
+                  src={getSortIcon('maidenName')}
                   alt=""
                   style={{ width: 18, height: 18 }}
                 />
@@ -131,9 +154,9 @@ export const App = () => {
           <tbody>
           {users.map(user => (
             <tr key={user.id}>
-              <td>
-                {user.lastName} {user.firstName} {user.middleName}
-              </td>
+              <td>{user.lastName}</td>
+              <td>{user.firstName}</td>
+              <td>{user.maidenName ? user.maidenName : '---------'}</td>
               <td>{user.age}</td>
               <td>{user.gender === "male" ? "Мужской" : "Женский"}</td>
               <td>{user.phone}</td>
