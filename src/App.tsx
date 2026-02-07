@@ -8,6 +8,7 @@ import sortDesc from '@/assets/sort-desc.svg'
 import sortNone from '@/assets/sort-none.svg'
 import type {Filters, Pagination, SortDirection, SortField} from "@/shared/types";
 import {UsersFilters} from "@/components/filters/UsersFilters";
+import {UsersPagination} from "@/components/pagination/UsersPagination";
 
 export const App = () => {
   const [users, setUsers] = useState<UserResponseDto[]>([])
@@ -43,7 +44,7 @@ export const App = () => {
     const status = (response as ErrorResponseDto).status;
     if (!status) {
       const usersData = response as UsersResponseDto;
-      setUsers(usersData.users);
+      setUsers(usersData.users ?? []);
       setTotal(usersData.total);
     }
     setLoading(false);
@@ -81,7 +82,8 @@ export const App = () => {
         filters={filters}
         setFilters={setFilters}
         onApply={fetchUsers}
-        setPagination={setPagination} />
+        setPagination={setPagination}
+      />
       <div className={loading ? "wrapper loading" : "wrapper"}>
         <table
           style={{
@@ -245,42 +247,11 @@ export const App = () => {
           </tbody>
         </table>
       </div>
-      <div className="pagination-container">
-        <div className="pagination-info">
-          Показаны {pagination.page * pagination.limit + 1}–{Math.min((pagination.page + 1) * pagination.limit, total)} из {total} записей
-        </div>
-
-        <div className="pagination-controls">
-          <button
-            className="pagination-btn prev"
-            onClick={() => setPagination(prev => ({ ...prev, page: Math.max(0, prev.page - 1) }))}
-            disabled={pagination.page === 0}
-          >
-            ← Назад
-          </button>
-
-          <select
-            className="pagination-select"
-            value={pagination.limit}
-            onChange={(e) => {
-              setPagination({ page: 0, limit: +e.target.value });
-            }}
-          >
-            <option value={5}>5 на странице</option>
-            <option value={10}>10 на странице</option>
-            <option value={20}>20 на странице</option>
-            <option value={50}>50 на странице</option>
-          </select>
-
-          <button
-            className="pagination-btn next"
-            onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
-            disabled={(pagination.page + 1) * pagination.limit >= total}
-          >
-            Вперед →
-          </button>
-        </div>
-      </div>
+      <UsersPagination
+        pagination={pagination}
+        setPagination={setPagination}
+        total={total}
+      />
     </div>
   );
 }
