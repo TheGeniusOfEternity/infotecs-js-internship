@@ -67,6 +67,8 @@ button:focus-visible {
   height: 100%;
   max-width: 1400px;
   position: relative;
+  display: flex;
+  margin: 0 auto;
 }
 
 .loading::after {
@@ -78,13 +80,14 @@ button:focus-visible {
   height: 100%;
 
   animation: shimmer 3s linear infinite forwards;
-  background-color: rgb(82, 73, 140);
-  background: linear-gradient(to right, rgb(56, 54, 73) 18%, rgb(64, 62, 81) 28%, rgb(56, 54, 73) 43%);
+  background: rgb(82, 73, 140) linear-gradient(to right, rgb(56, 54, 73) 18%, rgb(64, 62, 81) 28%, rgb(56, 54, 73) 43%);
   background-size: 1200px 400px;
 }
 
 h3 {
-  margin-top: 0;
+  margin: 0 auto 1rem auto;
+  max-width: 1400px;
+  width: 100%;
 }
 
 th {
