@@ -23,29 +23,37 @@ export const App = () => {
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
+    try {
+      const response = await userResolver.current.getAllWithFilters(
+        filters,
+        sortField,
+        sortDirection,
+        pagination
+      );
 
-    const response = await userResolver.current.getAllWithFilters(
-      filters,
-      sortField,
-      sortDirection,
-      pagination
-    );
-
-    const status = (response as ErrorResponseDto).status;
-    if (!status) {
-      const usersData = response as UsersResponseDto;
-      setUsers(usersData.users ?? []);
-      setTotal(usersData.total);
+      const status = (response as ErrorResponseDto).status;
+      if (!status) {
+        const usersData = response as UsersResponseDto;
+        setUsers(usersData.users ?? []);
+        setTotal(usersData.total);
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки пользователей:', error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
-  }, [sortField, sortDirection, pagination, filters]);
+  }, [filters, sortField, sortDirection, pagination]); // ✅ Все зависимости
 
-
+  // ✅ Загрузка при изменении любого параметра
   useEffect(() => {
-    fetchUsers()
-  }, [sortField, sortDirection])
+    fetchUsers();
+  }, [fetchUsers]);
 
-  const handleSort = (field: SortField) => {
+  const handlePaginationChange = useCallback((newPagination: Pagination) => {
+    setPagination(newPagination);
+  }, []);
+
+  const handleSort = useCallback((field: SortField) => {
     if (sortField !== field) {
       setSortField(field);
       setSortDirection("asc");
@@ -56,7 +64,8 @@ export const App = () => {
         return "asc";
       });
     }
-  };
+    setPagination(prev => ({ ...prev, page: 0 }));
+  }, [sortField]);
 
   const getSortIcon = (field: SortField) => {
     if (sortField !== field || !sortDirection) return sortNone;
@@ -86,7 +95,7 @@ export const App = () => {
             <th
               scope="col"
               aria-sort={
-                sortField === "firstName"
+                sortField === "lastName"
                   ? sortDirection === "asc"
                     ? "ascending"
                     : "descending"
@@ -128,7 +137,7 @@ export const App = () => {
             <th
               scope="col"
               aria-sort={
-                sortField === "firstName"
+                sortField === "maidenName"
                   ? sortDirection === "asc"
                     ? "ascending"
                     : "descending"
@@ -149,7 +158,7 @@ export const App = () => {
             <th
               scope="col"
               aria-sort={
-                sortField === "firstName"
+                sortField === "age"
                   ? sortDirection === "asc"
                     ? "ascending"
                     : "descending"
@@ -170,7 +179,7 @@ export const App = () => {
             <th
               scope="col"
               aria-sort={
-                sortField === "firstName"
+                sortField === "gender"
                   ? sortDirection === "asc"
                     ? "ascending"
                     : "descending"
@@ -191,7 +200,7 @@ export const App = () => {
             <th
               scope="col"
               aria-sort={
-                sortField === "firstName"
+                sortField === "phone"
                   ? sortDirection === "asc"
                     ? "ascending"
                     : "descending"
@@ -239,7 +248,7 @@ export const App = () => {
       </div>
       <UsersPagination
         pagination={pagination}
-        setPagination={setPagination}
+        onPaginationChange={handlePaginationChange}
         total={total}
       />
     </div>

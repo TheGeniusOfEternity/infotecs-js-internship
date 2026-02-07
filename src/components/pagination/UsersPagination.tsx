@@ -1,16 +1,36 @@
 import type {Pagination} from "@/shared/types";
-import type {Dispatch, SetStateAction} from "react";
 import "./UsersPagination.css";
 
 interface UsersPaginationProps {
   pagination: Pagination;
-  setPagination: Dispatch<SetStateAction<Pagination>>;
+  onPaginationChange: (newPagination: Pagination) => void;
   total: number;
 }
 
 export const UsersPagination = (
-  { pagination, setPagination, total }: UsersPaginationProps
-) => {
+  {
+    pagination,
+    onPaginationChange,
+    total
+  }: UsersPaginationProps) => {
+  const handlePrev = () => {
+    if (pagination.page > 0) {
+      const newPagination = { ...pagination, page: pagination.page - 1 };
+      onPaginationChange(newPagination);
+    }
+  };
+
+  const handleNext = () => {
+    if ((pagination.page + 1) * pagination.limit < total) {
+      const newPagination = { ...pagination, page: pagination.page + 1 };
+      onPaginationChange(newPagination);
+    }
+  };
+
+  const handleLimitChange = (limit: number) => {
+    onPaginationChange({ page: 0, limit });
+  };
+
   return (
     <div className="pagination-container">
       <div className="pagination-info">
@@ -20,7 +40,7 @@ export const UsersPagination = (
       <div className="pagination-controls">
         <button
           className="pagination-btn prev"
-          onClick={() => setPagination(prev => ({ ...prev, page: Math.max(0, prev.page - 1) }))}
+          onClick={handlePrev}
           disabled={pagination.page === 0}
         >
           ← Назад
@@ -29,9 +49,7 @@ export const UsersPagination = (
         <select
           className="pagination-select"
           value={pagination.limit}
-          onChange={(e) => {
-            setPagination({ page: 0, limit: +e.target.value });
-          }}
+          onChange={(e) => handleLimitChange(+e.target.value)}
         >
           <option value={5}>5 на странице</option>
           <option value={10}>10 на странице</option>
@@ -41,12 +59,12 @@ export const UsersPagination = (
 
         <button
           className="pagination-btn next"
-          onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
+          onClick={handleNext}
           disabled={(pagination.page + 1) * pagination.limit >= total}
         >
           Вперед →
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
