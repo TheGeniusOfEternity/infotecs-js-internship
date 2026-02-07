@@ -5,8 +5,9 @@ Test task for JS frontend developer internship.
 
 - TypeScript
 - React 19
+- Vite
 
-## Project Structure (Feature-Sliced Design)
+## Project Structure
 
 ```
 src/
