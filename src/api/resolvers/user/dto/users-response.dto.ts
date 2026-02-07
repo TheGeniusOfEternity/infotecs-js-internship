@@ -1,4 +1,4 @@
-import type { UserResponseDto } from "@/api/dto/user-response.dto";
+import type { UserResponseDto } from "@/api/resolvers/user/dto/user-response.dto";
 
 export interface UsersResponseDto {
   users: UserResponseDto[];

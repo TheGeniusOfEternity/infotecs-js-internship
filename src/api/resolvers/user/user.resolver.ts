@@ -1,5 +1,5 @@
 import Resolver from "@/api/resolver";
-import type { UsersResponseDto } from "@/api/dto/users-response.dto";
+import type { UsersResponseDto } from "@/api/resolvers/user/dto/users-response.dto";
 
 export class UserResolver {
   private apiResolver = new Resolver("users")
