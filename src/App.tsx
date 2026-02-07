@@ -1,4 +1,4 @@
-import { useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {UserResolver} from "@/api/resolvers/user/user.resolver";
 import type { ErrorResponseDto } from "@/api/dto/error-response.dto";
 import type { UserResponseDto } from "@/api/resolvers/user/dto/user-response.dto";
@@ -14,17 +14,17 @@ export const App = () => {
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const userResolver = new UserResolver();
+  const userResolver = useRef(new UserResolver());
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     setLoading(true);
-    const response = await userResolver.getAll(sortField, sortDirection);
+    const response = await userResolver.current.getAll(sortField, sortDirection);
     const status = (response as ErrorResponseDto).status;
     if (!status) {
       setUsers((response as UsersResponseDto).users);
     }
     setLoading(false);
-  }
+  }, [])
 
   useEffect(() => {
     fetchUsers()
@@ -63,6 +63,14 @@ export const App = () => {
           <thead>
           <tr>
             <th
+              scope="col"
+              aria-sort={
+                sortField === "firstName"
+                  ? sortDirection === "asc"
+                    ? "ascending"
+                    : "descending"
+                  : "none"
+              }
               onClick={() => handleSort("lastName")}
               className={sortField === "lastName" ? "sorted" : ""}
             >
@@ -76,6 +84,14 @@ export const App = () => {
               </div>
             </th>
             <th
+              scope="col"
+              aria-sort={
+                sortField === "firstName"
+                  ? sortDirection === "asc"
+                    ? "ascending"
+                    : "descending"
+                  : "none"
+              }
               onClick={() => handleSort("firstName")}
               className={sortField === "firstName" ? "sorted" : ""}
             >
@@ -83,12 +99,20 @@ export const App = () => {
                 <p>Имя</p>
                 <img
                   src={getSortIcon('firstName')}
-                  alt=""
+                  alt="sort-icon"
                   style={{ width: 18, height: 18 }}
                 />
               </div>
             </th>
             <th
+              scope="col"
+              aria-sort={
+                sortField === "firstName"
+                  ? sortDirection === "asc"
+                    ? "ascending"
+                    : "descending"
+                  : "none"
+              }
               onClick={() => handleSort("maidenName")}
               className={sortField === "maidenName" ? "sorted" : ""}
             >
@@ -96,12 +120,20 @@ export const App = () => {
                 <p>Отчество</p>
                 <img
                   src={getSortIcon('maidenName')}
-                  alt=""
+                  alt="sort-icon"
                   style={{ width: 18, height: 18 }}
                 />
               </div>
             </th>
             <th
+              scope="col"
+              aria-sort={
+                sortField === "firstName"
+                  ? sortDirection === "asc"
+                    ? "ascending"
+                    : "descending"
+                  : "none"
+              }
               onClick={() => handleSort("age")}
               className={sortField === "age" ? "sorted" : ""}
             >
@@ -109,25 +141,41 @@ export const App = () => {
                 <p>Возраст</p>
                 <img
                   src={getSortIcon('age')}
-                  alt=""
+                  alt="sort-icon"
                   style={{ width: 18, height: 18 }}
                 />
               </div>
             </th>
             <th
+              scope="col"
+              aria-sort={
+                sortField === "firstName"
+                  ? sortDirection === "asc"
+                    ? "ascending"
+                    : "descending"
+                  : "none"
+              }
               onClick={() => handleSort("gender")}
-              className={sortField === "gender" ? "sorted" : ""}
+              className={sortField === "gender" && sortDirection !== null ? "sorted" : ""}
             >
               <div className="column-header">
                 <p>Пол</p>
                 <img
                   src={getSortIcon('gender')}
-                  alt=""
+                  alt="sort-icon"
                   style={{ width: 18, height: 18 }}
                 />
               </div>
             </th>
             <th
+              scope="col"
+              aria-sort={
+                sortField === "firstName"
+                  ? sortDirection === "asc"
+                    ? "ascending"
+                    : "descending"
+                  : "none"
+              }
               onClick={() => handleSort("phone")}
               className={sortField === "phone" ? "sorted" : ""}
             >
@@ -135,18 +183,18 @@ export const App = () => {
                 <p>Телефон</p>
                 <img
                   src={getSortIcon('phone')}
-                  alt=""
+                  alt="sort-icon"
                   style={{ width: 18, height: 18 }}
                 />
               </div>
             </th>
-            <th>
+            <th scope="col">
               <p>Email</p>
             </th>
-            <th>
+            <th scope="col">
               <p>Страна</p>
             </th>
-            <th>
+            <th scope="col">
               <p>Город</p>
             </th>
           </tr>

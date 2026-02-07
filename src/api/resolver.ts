@@ -21,9 +21,7 @@ class Resolver {
     body?: U,
     headers: Record<string, string> = {},
   ): Promise<S | ErrorResponseDto> {
-    const fullUrl = `
-      ${apiConf.endpoint}/${this.baseUrl}${url && !url.startsWith("?") ? "/" : ""}${url}
-    `;
+    const fullUrl = `${apiConf.endpoint}/${this.baseUrl}${url && !url.startsWith("?") ? "/" : ""}${url}`;
     const config: RequestConfig<U> = {
       url: fullUrl,
       method,
@@ -53,7 +51,11 @@ class Resolver {
 
       return await response.json();
     } catch (error: unknown) {
-      throw new Error(String(error));
+      console.error(String(error));
+      return {
+        status: 0,
+        message: error instanceof Error ? error.message : String(error),
+      }
     }
   }
 }

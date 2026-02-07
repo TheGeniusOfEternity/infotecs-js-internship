@@ -24,8 +24,8 @@ a:hover {
 
 body {
   margin: 0;
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  width: 100%;
 }
 
 h1 {
@@ -56,12 +56,12 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
-  padding: 1.5rem;
+  padding: 1.5rem 0;
   height: 100vh;
 }
 
 .wrapper {
-  overflow: scroll;
+  overflow: auto;
   background-color: #2f2a39;
   width: 100%;
   height: 100%;
@@ -113,6 +113,7 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
 }
 
 
