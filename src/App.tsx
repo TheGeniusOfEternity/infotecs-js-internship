@@ -6,25 +6,49 @@ import type { UsersResponseDto } from "@/api/resolvers/user/dto/users-response.d
 import sortAsc from '@/assets/sort-asc.svg'
 import sortDesc from '@/assets/sort-desc.svg'
 import sortNone from '@/assets/sort-none.svg'
-import type { SortDirection, SortField } from "@/shared/types";
+import type {Filters, Pagination, SortDirection, SortField} from "@/shared/types";
+import {UsersFilters} from "@/components/filters/UsersFilters";
 
 export const App = () => {
   const [users, setUsers] = useState<UserResponseDto[]>([])
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortDirection, setSortDirection] = useState<SortDirection>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [filters, setFilters] = useState<Filters>({});
+  const [pagination, setPagination] = useState<Pagination>({ page: 0, limit: 10 });
+  const [total, setTotal] = useState(0);
 
   const userResolver = useRef(new UserResolver());
 
   const fetchUsers = useCallback(async () => {
     setLoading(true);
-    const response = await userResolver.current.getAll(sortField, sortDirection);
+    const params = new URLSearchParams();
+
+    params.append('limit', pagination.limit.toString());
+    params.append('skip', (pagination.page * pagination.limit).toString());
+
+    if (sortField && sortDirection) {
+      params.append('sortBy', sortField);
+      params.append('order', sortDirection);
+    }
+
+    if (filters.firstName) params.append('firstName', filters.firstName);
+    if (filters.lastName) params.append('lastName', filters.lastName);
+    if (filters.maidenName) params.append('maidenName', filters.maidenName);
+    if (filters.age) params.append('age', filters.age);
+    if (filters.gender) params.append('gender', filters.gender);
+    if (filters.phone) params.append('phone', filters.phone);
+
+    const response = await userResolver.current.getAll(null, null);
     const status = (response as ErrorResponseDto).status;
     if (!status) {
-      setUsers((response as UsersResponseDto).users);
+      const usersData = response as UsersResponseDto;
+      setUsers(usersData.users);
+      setTotal(usersData.total);
     }
     setLoading(false);
-  }, [])
+  }, [sortField, sortDirection, pagination, filters]);
+
 
   useEffect(() => {
     fetchUsers()
@@ -53,6 +77,11 @@ export const App = () => {
   return (
     <div className="container">
       <h3>Список пользователей</h3>
+      <UsersFilters
+        filters={filters}
+        setFilters={setFilters}
+        onApply={fetchUsers}
+        setPagination={setPagination} />
       <div className={loading ? "wrapper loading" : "wrapper"}>
         <table
           style={{
@@ -215,6 +244,42 @@ export const App = () => {
           ))}
           </tbody>
         </table>
+      </div>
+      <div className="pagination-container">
+        <div className="pagination-info">
+          Показаны {pagination.page * pagination.limit + 1}–{Math.min((pagination.page + 1) * pagination.limit, total)} из {total} записей
+        </div>
+
+        <div className="pagination-controls">
+          <button
+            className="pagination-btn prev"
+            onClick={() => setPagination(prev => ({ ...prev, page: Math.max(0, prev.page - 1) }))}
+            disabled={pagination.page === 0}
+          >
+            ← Назад
+          </button>
+
+          <select
+            className="pagination-select"
+            value={pagination.limit}
+            onChange={(e) => {
+              setPagination({ page: 0, limit: +e.target.value });
+            }}
+          >
+            <option value={5}>5 на странице</option>
+            <option value={10}>10 на странице</option>
+            <option value={20}>20 на странице</option>
+            <option value={50}>50 на странице</option>
+          </select>
+
+          <button
+            className="pagination-btn next"
+            onClick={() => setPagination(prev => ({ ...prev, page: prev.page + 1 }))}
+            disabled={(pagination.page + 1) * pagination.limit >= total}
+          >
+            Вперед →
+          </button>
+        </div>
       </div>
     </div>
   );
