@@ -42,12 +42,11 @@ export const App = () => {
     } finally {
       setLoading(false);
     }
-  }, [filters, sortField, sortDirection, pagination]); // ✅ Все зависимости
+  }, [filters, sortField, sortDirection, pagination]);
 
-  // ✅ Загрузка при изменении любого параметра
   useEffect(() => {
     fetchUsers();
-  }, [fetchUsers]);
+  }, []);
 
   const handlePaginationChange = useCallback((newPagination: Pagination) => {
     setPagination(newPagination);

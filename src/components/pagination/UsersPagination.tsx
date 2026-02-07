@@ -34,7 +34,9 @@ export const UsersPagination = (
   return (
     <div className="pagination-container">
       <div className="pagination-info">
-        Показаны {pagination.page * pagination.limit + 1}–{Math.min((pagination.page + 1) * pagination.limit, total)} из {total} записей
+        {total === 0
+          ? "Показаны 0–0 из 0 записей"
+          : `Показаны ${pagination.page * pagination.limit + 1}–${Math.min((pagination.page + 1) * pagination.limit, total)} из ${total} записей`}
       </div>
 
       <div className="pagination-controls">

@@ -20,8 +20,9 @@ export const UsersFilters = (
   return (
     <div className="filters-container">
       <div className="filters-group">
-        <label className="filter-label">Фамилия</label>
+        <label htmlFor="lastName-input" className="filter-label">Фамилия</label>
         <input
+          id="lastName-input"
           className="filter-input"
           placeholder="Иванов"
           value={filters.lastName || ""}
@@ -30,8 +31,9 @@ export const UsersFilters = (
       </div>
 
       <div className="filters-group">
-        <label className="filter-label">Имя</label>
+        <label htmlFor="firstName-input" className="filter-label">Имя</label>
         <input
+          id="firstName-input"
           className="filter-input"
           placeholder="Иван"
           value={filters.firstName || ""}
@@ -40,8 +42,9 @@ export const UsersFilters = (
       </div>
 
       <div className="filters-group">
-        <label className="filter-label">Отчество</label>
+        <label htmlFor="maidenName-input" className="filter-label">Отчество</label>
         <input
+          id="maidenName-input"
           className="filter-input"
           placeholder="Иванович"
           value={filters.maidenName || ""}
@@ -50,8 +53,11 @@ export const UsersFilters = (
       </div>
 
       <div className="filters-group">
-        <label className="filter-label">Возраст</label>
+        <label htmlFor="age-input" className="filter-label">
+          Возраст
+        </label>
         <input
+          id="age-input"
           className="filter-input"
           type="number"
           placeholder="18"
@@ -62,8 +68,9 @@ export const UsersFilters = (
       </div>
 
       <div className="filters-group">
-        <label className="filter-label">Пол</label>
+        <label htmlFor="gender-input" className="filter-label">Пол</label>
         <select
+          id="gender-input"
           className="filter-input"
           value={filters.gender || ""}
           onChange={(e) => setFilters(prev => ({ ...prev, gender: e.target.value || undefined }))}
@@ -75,8 +82,9 @@ export const UsersFilters = (
       </div>
 
       <div className="filters-group">
-        <label className="filter-label">Телефон</label>
+        <label htmlFor="phone-input" className="filter-label">Телефон</label>
         <input
+          id="phone-input"
           className="filter-input"
           placeholder="+7..."
           value={filters.phone || ""}

@@ -1,6 +1,6 @@
 import Resolver from "@/api/resolver";
 import type { UsersResponseDto } from "@/api/resolvers/user/dto/users-response.dto";
-import type {Filters, SortDirection, SortField} from "@/shared/types";
+import type {Filters, Pagination, SortDirection, SortField} from "@/shared/types";
 
 export class UserResolver {
   private apiResolver = new Resolver("users");
@@ -17,7 +17,7 @@ export class UserResolver {
     );
   }
 
-  public async filter(filters: Partial<Filters>, pagination: { page: number; limit: number }) {
+  public async filter(filters: Partial<Filters>, pagination: Pagination) {
     const params = new URLSearchParams();
 
     params.append("limit", pagination.limit.toString());
